@@ -87,9 +87,20 @@ class CLILyricsQuiz
     end
     input = STDIN.gets.chomp.to_i
     if input == correct_answer
-      puts "Yes!"
+      answer_response("Yes")
     else
-      puts "NOPE"
+      answer_response("NOPE")
     end
+  end
+
+  def answer_response(yes_or_no)
+    puts
+    puts
+    puts "***** #{yes_or_no}! *****".center(50)
+    puts
+    # display lyrics
+    # display title/artist
+    puts
+    puts
   end
 end
