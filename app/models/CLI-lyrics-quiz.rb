@@ -55,12 +55,8 @@ class CLILyricsQuiz
       puts "***** Round #{round}! *****".center(50)
       puts
       puts
-      puts "1. Song"
-      puts "2. song"
-      puts "3. sonG"
-      song_choice = STDIN.gets.chomp.to_i
+      display_choices
       puts
-      # results
       round_options
       input = STDIN.gets.to_s
       if input == "\n"
@@ -71,11 +67,29 @@ class CLILyricsQuiz
     end
   end
 
-    def round_options
-      puts
-      puts "Press enter to move on"
-      puts "Press q to quit"
-      puts
-      puts
+  def round_options
+    puts
+    puts "Press enter to move on"
+    puts "Press q to quit"
+    puts
+    puts
+  end
+
+  def display_choices
+    choices = ["s1", "s2", "s3", "s4"]
+    possible_answers = choices.shuffle
+    correct_answer = nil
+    possible_answers.each.with_index do |answer, i|
+      puts "#{i + 1}.  #{answer}"
+      if answer == choices[0]
+        correct_answer = i + 1
+      end
     end
+    input = STDIN.gets.chomp.to_i
+    if input == correct_answer
+      puts "Yes!"
+    else
+      puts "NOPE"
+    end
+  end
 end
