@@ -1,6 +1,7 @@
 require 'pry'
 require 'open-uri'
 require 'nokogiri'
+require './app/models/genre.rb'
 top_50_page = Nokogiri::HTML(open("html-pages/genius-top-50.html"))
 rap_page = Nokogiri::HTML(open("html-pages/genius-rap.html"))
 country_page = Nokogiri::HTML(open("html-pages/genius-country.html"))
@@ -16,5 +17,12 @@ def find_links(page)
 end
 humble = Nokogiri::HTML(open("https://genius.com/Kendrick-lamar-humble-lyrics"))
 
-binding.pry
+
 find_links(country_page)
+g1 = Genre.new(name: "pop")
+
+ids = GenreSong.where("genre_id = 1").pluck(:id)
+song1 = GenreSong.find(ids.sample).song.title
+song2 = GenreSong.find(ids.sample).song.title
+song3 = GenreSong.find(ids.sample).song.title
+song4 = GenreSong.find(ids.sample).song.title

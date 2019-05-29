@@ -14,11 +14,11 @@ class CLILyricsQuiz
       if choice == 1
         game
       elsif choice == 2
-        # go to highscores
+        # go to highscores -- still needs to be added in
       elsif choice == 3
-        how_to
+        how_to #instructions for the game
       elsif choice == 4
-        is_running = false
+        is_running = false #kicks out of the while-loop, stops running
       end
     end
   end
@@ -53,6 +53,8 @@ class CLILyricsQuiz
     while round <= num_rounds
       puts
       puts "***** Round #{round}! *****".center(50)
+      puts
+      #display lyrics here
       puts
       puts
       display_choices
