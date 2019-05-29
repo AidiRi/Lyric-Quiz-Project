@@ -6,6 +6,11 @@ task :console do
   Pry.start
 end
 
+desc "Showing all Songs"
+task :songs do 
+  puts Song.all
+end
+
 desc "run the Lyrics Quiz"
 task :run do
   cli = CLILyricsQuiz.new
