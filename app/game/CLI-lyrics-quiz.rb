@@ -109,7 +109,10 @@ class CLILyricsQuiz
     puts "How To Play".center(50)
     puts "*****************".center(50)
     puts
-    puts "howtohowtohowtohowtohowto".center(50)
+    puts "1. Select a Genre".center(50)
+    puts "2. Select a Difficulty".center(50)
+    puts "3. You will be given lyrics from a song".center(50)
+    puts "4. Use the arrow keys to select your guess".center(50)
     puts
     puts"*****************".center(50)
     puts
