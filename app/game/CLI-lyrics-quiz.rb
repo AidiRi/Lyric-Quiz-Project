@@ -9,20 +9,27 @@ class CLILyricsQuiz
     puts "*****************".center(50)
     is_running = true
     while is_running
-      present_menu
-      choice = STDIN.gets.chomp.to_i
-      if choice == 1
-        # g_genre = set_genre
-        # g_options = set_options
+      choice = present_menu
+      if choice == "Play"
         game(set_genre, set_options, set_difficulty)
-      elsif choice == 2
+      elsif choice == "Check_Scores"
         # go to highscores -- still needs to be added in
-      elsif choice == 3
+      elsif choice == "How_To"
         how_to #instructions for the game
-      elsif choice == 4
+      elsif choice == "Quit"
         is_running = false #kicks out of the while-loop, stops running
       end
     end
+  end
+
+  def present_menu
+    puts
+    puts
+    prompt = TTY::Prompt.new
+    result = prompt.select("What would you like to do?", %w(Play Check_Scores How_To Quit))
+    puts
+    puts
+    result
   end
 
   def set_difficulty
@@ -91,17 +98,7 @@ class CLILyricsQuiz
     genre_id
   end
 
-  def present_menu
-    puts
-    puts
-    puts "What would you like to do?"
-    puts
-    puts "1. Play a New Game"
-    puts "2. Check High Scores"
-    puts "3. How to Play"
-    puts "4. Quit"
-    puts
-  end
+
 
   def how_to
     puts
