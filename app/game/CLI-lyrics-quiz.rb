@@ -12,7 +12,9 @@ class CLILyricsQuiz
       present_menu
       choice = STDIN.gets.chomp.to_i
       if choice == 1
-        game
+        g_genre = set_genre
+        g_options = set_options
+        game(g_genre, g_options)
       elsif choice == 2
         # go to highscores -- still needs to be added in
       elsif choice == 3
@@ -21,6 +23,52 @@ class CLILyricsQuiz
         is_running = false #kicks out of the while-loop, stops running
       end
     end
+  end
+
+  def set_options
+    option_num = nil
+    puts
+    puts
+    puts "How confidant are you?"
+    puts "1. Not very"
+    puts "2. I'm ok"
+    puts "3. I GOT THIS"
+    puts
+    input = STDIN.gets.chomp.to_i
+    if input == 1
+      option_num = 2
+    elsif input == 2
+      option_num = 4
+    elsif input == 3
+      option_num = 6
+    end
+    option_num
+  end
+
+  def set_genre
+    genre_id = nil
+    puts
+    puts
+    puts "Pick a genre you'd like to work in:"
+    puts Search.get_genres
+    puts
+    input = STDIN.gets.chomp.to_i
+    if input == 1
+      genre_id = 1
+    elsif input == 2
+      genre_id = 2
+    elsif input == 3
+      genre_id = 3
+    elsif input == 4
+      genre_id = 4
+    elsif input == 5
+      genre_id = 5
+    elsif input == 6
+      genre_id = 6
+    else
+      puts "Not a valid option"
+    end
+    genre_id
   end
 
   def present_menu
@@ -47,18 +95,29 @@ class CLILyricsQuiz
     puts
   end
 
-  def game
+  def game(genre, options)
     round = 1
     num_rounds = 10
     while round <= num_rounds
+      choices = pick_choices(genre, options)
+      titles = take_titles(choices)#get titles of choices
+      snippet = Search.get_lyric_sample(choices[0].lyrics)
       puts
       puts "***** Round #{round}! *****".center(50)
       puts
-      #display lyrics here
+      puts "♪♫~~  " + snippet + " ~~♪♫"
       puts
       puts
-      display_choices
+      puts "Which song is this from?"
+      correct_answer = display_choices(titles)
+      input = STDIN.gets.chomp.to_i
+      if input == correct_answer
+        answer_response("Yes", choices[0])
+      else
+        answer_response("NOPE", choices[0])
+      end
       puts
+      sleep(1)
       round_options
       input = STDIN.gets.to_s
       if input == "\n"
@@ -66,6 +125,12 @@ class CLILyricsQuiz
       elsif input == "q\n"
         round = 11
       end
+    end
+  end
+
+  def take_titles(choices)
+    choices.collect do |i|
+      i.title
     end
   end
 
@@ -77,31 +142,31 @@ class CLILyricsQuiz
     puts
   end
 
-  def display_choices
-    choices = ["s1", "s2", "s3", "s4"]
+  def pick_choices(genre_id, option_num)
+    choices = Search.get_question_by_genre(genre_id, option_num)
+    choices
+  end
+
+  def display_choices(choices_array)
+    choices = choices_array
     possible_answers = choices.shuffle
     correct_answer = nil
     possible_answers.each.with_index do |answer, i|
-      puts "#{i + 1}.  #{answer}"
+      puts "#{i + 1}.  #{answer.strip}"
       if answer == choices[0]
         correct_answer = i + 1
       end
     end
-    input = STDIN.gets.chomp.to_i
-    if input == correct_answer
-      answer_response("Yes")
-    else
-      answer_response("NOPE")
-    end
+    correct_answer
   end
 
-  def answer_response(yes_or_no)
+  def answer_response(yes_or_no, first_choice)
     puts
     puts
     puts "***** #{yes_or_no}! *****".center(50)
     puts
-    # display lyrics
-    # display title/artist
+    puts "It was from #{first_choice.title}".center(50)
+    puts "by #{first_choice.artist.name}".center(50)
     puts
     puts
   end

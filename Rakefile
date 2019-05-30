@@ -1,4 +1,5 @@
 require_relative 'config/environment.rb'
+require_all "app/game"
 require "sinatra/activerecord/rake"
 
 desc "start console"
@@ -7,7 +8,7 @@ task :console do
 end
 
 desc "Showing all Songs"
-task :songs do 
+task :songs do
   puts Song.all
 end
 

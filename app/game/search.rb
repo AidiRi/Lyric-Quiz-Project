@@ -7,11 +7,13 @@ class Search < ActiveRecord::Base
 
     # This method returns an array of all the geners in the db
     def self.get_genres
-        return Genre.all
+      Genre.all.collect.with_index do |genre, i|
+        "#{i + 1}. #{genre.name}"
+      end
     end
 
-    # This method takes in a genre id and difficulty and returns 
-    # and array where array.length = difficulty. The array contains 
+    # This method takes in a genre id and difficulty and returns
+    # and array where array.length = difficulty. The array contains
     # random songs in that genre
     def self.get_question_by_genre(genre_id, difficulty)
         possibile_songs_in_genre = GenreSong.where(genre_id: genre_id)
@@ -21,7 +23,7 @@ class Search < ActiveRecord::Base
         end
     end
 
-    # This method takes in lyrics as a string and returns a random chunk 
+    # This method takes in lyrics as a string and returns a random chunk
     # from those lyrics
     def self.get_lyric_sample(lyrics)
         lyric_array = lyrics.split('", "')
@@ -31,14 +33,13 @@ class Search < ActiveRecord::Base
         start_index = rand(0..limit)
         end_index = start_index + amount_of_lines - 1
         result = ""
-        puts lyric_array[start_index..end_index].length
         lyric_array[start_index..end_index].each do |line|
             result += "#{line}\n"
         end
         return result
     end
 
-    # This method takes in a song object and returns the name of that artist 
+    # This method takes in a song object and returns the name of that artist
     def self.get_artist(song)
         return Artist.find_by(id: song.artist_id).name
     end
@@ -46,5 +47,3 @@ class Search < ActiveRecord::Base
 end
 
 puts Search.get_artist(Song.all[0])
-
-
