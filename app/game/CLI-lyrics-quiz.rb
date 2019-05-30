@@ -70,6 +70,12 @@ class CLILyricsQuiz
       level = 2
     elsif input == 3
       level = 3
+    elsif input == 4
+      level = 4
+    elsif input == 5
+      level = 5
+    elsif input == 6
+      level = 6
     end
     level
   end
@@ -78,26 +84,13 @@ class CLILyricsQuiz
     genre_id = nil
     puts
     puts
-    puts "Pick a genre you'd like to work in:"
-    puts Search.get_genres
-    puts
-    input = STDIN.gets.chomp.to_i
-    if input == 1
-      genre_id = 1
-    elsif input == 2
-      genre_id = 2
-    elsif input == 3
-      genre_id = 3
-    elsif input == 4
-      genre_id = 4
-    elsif input == 5
-      genre_id = 5
-    elsif input == 6
-      genre_id = 6
-    else
-      puts "Not a valid option"
+    prompt = TTY::Prompt.new
+    genre_input = prompt.select('Pick a genre you\'d like to work with') do |menu|
+      6.times do |i|
+        menu.choice Search.get_genres[i], i + 1
+      end
     end
-    genre_id
+    level_chooser(genre_input)
   end
 
 
