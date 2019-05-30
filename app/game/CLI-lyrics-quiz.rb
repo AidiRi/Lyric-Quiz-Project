@@ -12,9 +12,9 @@ class CLILyricsQuiz
       present_menu
       choice = STDIN.gets.chomp.to_i
       if choice == 1
-        g_genre = set_genre
-        g_options = set_options
-        game(g_genre, g_options)
+        # g_genre = set_genre
+        # g_options = set_options
+        game(set_genre, set_options)
       elsif choice == 2
         # go to highscores -- still needs to be added in
       elsif choice == 3
@@ -98,34 +98,57 @@ class CLILyricsQuiz
   def game(genre, options)
     round = 1
     num_rounds = 10
+    total_points = 0
     while round <= num_rounds
-      choices = pick_choices(genre, options)
-      titles = take_titles(choices)#get titles of choices
-      snippet = Search.get_lyric_sample(choices[0].lyrics)
-      puts
-      puts "***** Round #{round}! *****".center(50)
-      puts
-      puts "♪♫~~  " + snippet + " ~~♪♫"
-      puts
-      puts
-      puts "Which song is this from?"
-      correct_answer = display_choices(titles)
-      input = STDIN.gets.chomp.to_i
-      if input == correct_answer
-        answer_response("Yes", choices[0])
-      else
-        answer_response("NOPE", choices[0])
-      end
+      round_point = run_round(round, genre, options)
+      total_points += round_point
       puts
       sleep(1)
-      round_options
-      input = STDIN.gets.to_s
-      if input == "\n"
+      if round == 10
         round += 1
-      elsif input == "q\n"
-        round = 11
+      else
+        round_options
+        input = STDIN.gets.to_s
+        if input == "\n"
+          round += 1
+        elsif input == "q\n"
+          round = 11
+        end
       end
     end
+    # run_round(round, genre, options)
+    display_points(total_points)
+  end
+
+  def run_round(round, genre, options)
+    point = 0
+    choices = pick_choices(genre, options)
+    titles = take_titles(choices)#get titles of choices
+    snippet = Search.get_lyric_sample(choices[0].lyrics)
+    puts
+    puts "***** Round #{round}! *****".center(50)
+    puts
+    puts "♪♫~~  " + snippet + " ~~♪♫"
+    puts
+    puts
+    puts "Which song is this from?"
+    correct_answer = display_choices(titles)
+    input = STDIN.gets.chomp.to_i
+    if input == correct_answer
+      answer_response("Yes", choices[0])
+      point += 1
+    else
+      answer_response("NOPE", choices[0])
+    end
+    point #need to add together with other rounds and put sum into display_points
+  end
+
+  def display_points(total_points)
+    puts
+    puts "***** Noice. *****".center(50)
+    puts "You got #{total_points} points!".center(50)
+    puts
+    puts
   end
 
   def take_titles(choices)
@@ -164,8 +187,8 @@ class CLILyricsQuiz
     puts
     puts
     puts "***** #{yes_or_no}! *****".center(50)
-    puts
-    puts "It was from #{first_choice.title}".center(50)
+    puts #when adding colors, use if= yes_or_no == "Yes!"/"NOPE"...
+    puts "It was from '#{first_choice.title}'".center(50)
     puts "by #{first_choice.artist.name}".center(50)
     puts
     puts
