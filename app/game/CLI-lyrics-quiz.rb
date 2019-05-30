@@ -1,3 +1,5 @@
+require 'tty-prompt'
+
 class CLILyricsQuiz
   def initialize
   end

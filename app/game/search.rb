@@ -25,10 +25,13 @@ class Search < ActiveRecord::Base
 
     # This method takes in lyrics as a string and returns a random chunk
     # from those lyrics
-    def self.get_lyric_sample(lyrics)
+    def self.get_lyric_sample(lyrics, difficulty)
         lyric_array = lyrics.split('", "')
         ray_len = lyric_array.length
-        amount_of_lines = rand(4..8)
+        # Randomized option
+        # amount_of_lines = rand(4..(8 - difficulty))
+        # Static option
+        amount_of_lines = 6 - difficulty
         limit = (ray_len - 1) - amount_of_lines
         start_index = rand(0..limit)
         end_index = start_index + amount_of_lines - 1
@@ -46,4 +49,3 @@ class Search < ActiveRecord::Base
 
 end
 
-puts Search.get_artist(Song.all[0])
