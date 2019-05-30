@@ -1,5 +1,3 @@
-require 'tty-prompt'
-
 class CLILyricsQuiz
   def initialize
   end
@@ -16,7 +14,7 @@ class CLILyricsQuiz
       if choice == 1
         # g_genre = set_genre
         # g_options = set_options
-        game(set_genre, set_options)
+        game(set_genre, set_options, set_difficulty)
       elsif choice == 2
         # go to highscores -- still needs to be added in
       elsif choice == 3
@@ -25,6 +23,26 @@ class CLILyricsQuiz
         is_running = false #kicks out of the while-loop, stops running
       end
     end
+  end
+
+  def set_difficulty
+    difficulty_num = nil
+    puts
+    puts
+    puts "How well do you know your stuff?"
+    puts "1. What's a radio?"
+    puts "2. I listen regularly"
+    puts "3. LET'S DO THIS"
+    puts
+    input = STDIN.gets.chomp.to_i
+    if input == 1
+      difficulty_num = 1
+    elsif input == 2
+      difficulty_num = 2
+    elsif input == 3
+      difficulty_num = 3
+    end
+    difficulty_num
   end
 
   def set_options
@@ -97,12 +115,12 @@ class CLILyricsQuiz
     puts
   end
 
-  def game(genre, options)
+  def game(genre, options, difficulty)
     round = 1
     num_rounds = 10
     total_points = 0
     while round <= num_rounds
-      round_point = run_round(round, genre, options)
+      round_point = run_round(round, genre, options, difficulty)
       total_points += round_point
       puts
       sleep(1)
@@ -118,15 +136,14 @@ class CLILyricsQuiz
         end
       end
     end
-    # run_round(round, genre, options)
     display_points(total_points)
   end
 
-  def run_round(round, genre, options)
+  def run_round(round, genre, options, difficulty)
     point = 0
     choices = pick_choices(genre, options)
     titles = take_titles(choices)#get titles of choices
-    snippet = Search.get_lyric_sample(choices[0].lyrics)
+    snippet = Search.get_lyric_sample(choices[0].lyrics, difficulty)
     puts
     puts "***** Round #{round}! *****".center(50)
     puts
