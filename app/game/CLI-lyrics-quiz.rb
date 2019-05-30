@@ -1,6 +1,8 @@
 class CLILyricsQuiz
   def initialize
+    # prompt = TTY::Prompt.new
   end
+
 
   def run
     puts
@@ -128,11 +130,10 @@ class CLILyricsQuiz
       if round == 10
         round += 1
       else
-        round_options
-        input = STDIN.gets.to_s
-        if input == "\n"
+        round_choice = end_round_options
+        if round_choice == nil || round_choice == "\r"
           round += 1
-        elsif input == "q\n"
+        elsif round_choice == "\e"
           round = 11
         end
       end
@@ -158,7 +159,7 @@ class CLILyricsQuiz
     else
       answer_response("NOPE", choices[0])
     end
-    point #need to add together with other rounds and put sum into display_points
+    point
   end
 
   def display_points(total_points)
@@ -175,12 +176,13 @@ class CLILyricsQuiz
     end
   end
 
-  def round_options
+  def end_round_options
     puts
-    puts "Press enter to move on"
-    puts "Press q to quit"
+    prompt = TTY::Prompt.new
+    output = prompt.keypress("Press ENTER to continue, \nPress ESC to quit, \nResumes automatically in :countdown ...",  timeout: 4, keys: [:escape, :return])
     puts
     puts
+    output
   end
 
   def pick_choices(genre_id, option_num)
