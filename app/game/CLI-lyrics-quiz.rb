@@ -43,12 +43,22 @@ class CLILyricsQuiz
     end
     puts
     puts
-    # puts "How well do you know your stuff?"
-    # puts "1. What's a radio?"
-    # puts "2. I listen regularly"
-    # puts "3. LET'S DO THIS"
-    # input = STDIN.gets.chomp.to_i
     level_chooser(diff_input)
+  end
+
+  def set_options
+    option_num = nil
+    puts
+    puts
+    prompt = TTY::Prompt.new
+    option_input = prompt.select('How confidant are you?') do |menu|
+      menu.choice 'Not very',  1
+      menu.choice 'I\'m ok', 2
+      menu.choice 'I GOT THIS',  3
+    end
+    puts
+    puts
+    level_chooser(option_input * 2)
   end
 
   def level_chooser(prompt_input)
@@ -62,26 +72,6 @@ class CLILyricsQuiz
       level = 3
     end
     level
-  end
-
-  def set_options
-    option_num = nil
-    puts
-    puts
-    puts "How confidant are you?"
-    puts "1. Not very"
-    puts "2. I'm ok"
-    puts "3. I GOT THIS"
-    puts
-    input = STDIN.gets.chomp.to_i
-    if input == 1
-      option_num = 2
-    elsif input == 2
-      option_num = 4
-    elsif input == 3
-      option_num = 6
-    end
-    option_num
   end
 
   def set_genre
