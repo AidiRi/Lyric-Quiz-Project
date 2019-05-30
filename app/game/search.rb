@@ -47,8 +47,8 @@ class Search < ActiveRecord::Base
         return Artist.find_by(id: song.artist_id).name
     end
 
-    # This method takes in a user name and a score. If the record 
-    # already exists and if the new score is higher than the old 
+    # This method takes in a user name and a score. If the record
+    # already exists and if the new score is higher than the old
     # score, then the record is updated
     def self.add_new_score(user_name, new_score)
         score = Score.find_or_create_by(user_name: user_name)
@@ -62,12 +62,8 @@ class Search < ActiveRecord::Base
         leaderboard = ""
         scores = Score.all.order(score: :desc).limit(10)
         scores.each do |score|
-            leaderboard += "#{score.user_name} :::: #{score.score}\n"
+            leaderboard += "#{score.user_name} :::: #{score.score}\n".center(50)
         end
-        return leaderboard        
+        return leaderboard
     end
 end
-
-
-
-

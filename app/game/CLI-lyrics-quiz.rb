@@ -13,13 +13,18 @@ class CLILyricsQuiz
       if choice == "Play"
         game(set_genre, set_options, set_difficulty)
       elsif choice == "Check_Scores"
-        # go to highscores -- still needs to be added in
+        show_high_scores
+        # go to highscores
       elsif choice == "How_To"
         how_to #instructions for the game
       elsif choice == "Quit"
         is_running = false #kicks out of the while-loop, stops running
       end
     end
+  end
+
+  def show_high_scores
+    puts Search.get_scoreboard
   end
 
   def present_menu
@@ -146,10 +151,8 @@ class CLILyricsQuiz
     puts "♪♫~~  " + snippet + " ~~♪♫"
     puts
     puts
-    puts "Which song is this from?"
-    correct_answer = display_choices(titles)
-    input = STDIN.gets.chomp.to_i
-    if input == correct_answer
+    correct_answer = display_make_choices(titles)
+    if correct_answer
       answer_response("Yes", choices[0])
       point += 1
     else
@@ -185,17 +188,20 @@ class CLILyricsQuiz
     choices
   end
 
-  def display_choices(choices_array)
+  def display_make_choices(choices_array)
     choices = choices_array
     possible_answers = choices.shuffle
     correct_answer = nil
-    possible_answers.each.with_index do |answer, i|
-      puts "#{i + 1}.  #{answer.strip}"
-      if answer == choices[0]
-        correct_answer = i + 1
+    prompt = TTY::Prompt.new
+    answer_input = prompt.select('Which song is this from?') do |menu|
+      possible_answers.length.times do |i|
+        menu.choice possible_answers[i], i + 1
+        if possible_answers[i] == choices[0]
+          correct_answer = i + 1
+        end
       end
     end
-    correct_answer
+    correct_answer == answer_input
   end
 
   def answer_response(yes_or_no, first_choice)
