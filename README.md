@@ -26,7 +26,7 @@ What you'll need before you can play
 ## Built With
 
 * [Ruby](https://www.ruby-lang.org/en/) - The programming language
-* [SQLite](hhttps://www.sqlite.org/index.html) - Database
+* [SQLite](hhttps://www.sqlite.org) - Database
 * [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html) - ORM
 * [TTY](https://piotrmurach.github.io/tty/) - Terminal App Toolkit
 
