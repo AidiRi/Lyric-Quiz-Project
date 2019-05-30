@@ -33,23 +33,35 @@ class CLILyricsQuiz
   end
 
   def set_difficulty
-    difficulty_num = nil
     puts
     puts
-    puts "How well do you know your stuff?"
-    puts "1. What's a radio?"
-    puts "2. I listen regularly"
-    puts "3. LET'S DO THIS"
-    puts
-    input = STDIN.gets.chomp.to_i
-    if input == 1
-      difficulty_num = 1
-    elsif input == 2
-      difficulty_num = 2
-    elsif input == 3
-      difficulty_num = 3
+    prompt = TTY::Prompt.new
+    diff_input = prompt.select('How well do you know your stuff?') do |menu|
+      menu.choice 'What\'s a radio?',  1
+      menu.choice 'I listen regularly', 2
+      menu.choice 'LET\'S DO THIS',  3
     end
-    difficulty_num
+    puts
+    puts
+    # puts "How well do you know your stuff?"
+    # puts "1. What's a radio?"
+    # puts "2. I listen regularly"
+    # puts "3. LET'S DO THIS"
+    # input = STDIN.gets.chomp.to_i
+    level_chooser(diff_input)
+  end
+
+  def level_chooser(prompt_input)
+    input = prompt_input
+    level = nil
+    if input == 1
+      level = 1
+    elsif input == 2
+      level = 2
+    elsif input == 3
+      level = 3
+    end
+    level
   end
 
   def set_options
