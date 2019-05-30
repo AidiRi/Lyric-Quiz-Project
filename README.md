@@ -1,5 +1,4 @@
-# Lyric Quiz
-
+# Lyric Quiz ♫ ♪ ♫ ♪ 
 Lyric quiz is a CLI application written in Ruby that allows users to play a quiz game. 
 Users can select a genre and difficulty and proceed to test their music
 knowledge!

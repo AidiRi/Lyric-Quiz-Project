@@ -102,7 +102,8 @@ class CLILyricsQuiz
     puts "*****************".center(50)
     puts
     puts "1. Select a Genre".center(50)
-    puts "2. Select a Difficulty".center(50)
+    puts "2. Select an option difficulty (number of choices to pick from)".center(50)
+    puts "2. Select a line difficulty (amount of lyrics given)".center(50)
     puts "3. You will be given lyrics from a song".center(50)
     puts "4. Use the arrow keys to select your guess".center(50)
     puts
