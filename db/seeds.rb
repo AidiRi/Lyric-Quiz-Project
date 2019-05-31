@@ -1,6 +1,3 @@
-require 'pry'
-require 'open-uri'
-require 'nokogiri'
 require_relative '../config/environment.rb'
 
 # Genres
