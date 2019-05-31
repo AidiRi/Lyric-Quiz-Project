@@ -37,7 +37,7 @@ class CLILyricsQuiz
     prompt = TTY::Prompt.new
     result = prompt.select("What would you like to do?".light_magenta, %w(Play Check_Scores How_To Quit))
     puts
-    puts
+    puts #PLACEMENT OF PUTS IS IMPORTANT!!!
     result
   end
 
@@ -53,40 +53,87 @@ class CLILyricsQuiz
       puts
       sleep(1)
       if round == 10
+        #breaks out of the loop without showing end_round_options
         round += 1
       else
+        #round_choice is return of #end_round_options
         round_choice = end_round_options
         if round_choice == nil || round_choice == "\r"
+          #goes to next round
           round += 1
         elsif round_choice == "\e"
+          #breaks the game's while loop and goes back to the main menu
           round = 11
         end
       end
     end
+    #displays points at the end of 10 rounds
     display_points(total_points)
   end
 
   def run_round(round, genre, options, difficulty)
     point = 0
-    #creates an array of songs from genre chosen with chosen # of options
+    #creates an array of random songs from chosen genre with chosen # of title options
     choices = pick_choices(genre, options)
-    #get titles of choices
+    #get titles of choices to display
     titles = take_titles(choices)
+    #creates a snippet from the first song in choices array = first song
+    #is defaulted to "correct answer"
     snippet = Search.get_lyric_sample(choices[0].lyrics, difficulty)
+
     puts
     puts "***** Round #{round}! *****".center(50).light_green
     puts
     puts ("♪♫~~  " + snippet + " ~~♪♫").light_cyan
     puts
     puts
-    correct_answer = display_make_choices(titles)
-    if correct_answer
+
+    #correct_answer is return value of #display_make_choices
+    correct_answer = display_make_choices(titles) #boolean
+    if correct_answer #true
       answer_response("Yes".green.blink, choices[0])
       point += 1
-    else
+    else #false
       answer_response("NOPE".red.blink, choices[0])
     end
+    #returns a 0 or 1 as a point
     point
+  end
+
+  #displays choices array to user
+  def display_make_choices(choices_array)
+    #redundant, but too lazy to change
+    choices = choices_array
+    #randomizes the choices/possible_answers in the array
+    possible_answers = choices.shuffle
+    correct_answer = nil
+    prompt = TTY::Prompt.new
+
+    answer_input = prompt.select("Which song is this from?".light_magenta) do |menu|
+      #iterates through each choice and prints it out as menu option,
+      #with return value of i + 1 when chosen
+      possible_answers.length.times do |i|
+        menu.choice possible_answers[i], i + 1
+        if possible_answers[i] == choices[0]
+          #keeps track of which option is the correct answer
+          correct_answer = i + 1
+        end
+      end
+    end
+    #compares whether the answer chosen is the correct
+    #answer, returns boolean
+    correct_answer == answer_input
+  end
+
+  def display_points(total_points)
+    puts
+    puts
+    puts
+    puts "***** Noice. *****".center(50).green
+    puts "You got #{total_points} points!".center(50).light_cyan
+    puts
+    puts
+    puts
   end
 
   def set_genre
@@ -99,6 +146,8 @@ class CLILyricsQuiz
         menu.choice Search.get_genres[i], i + 1
       end
     end
+    puts
+    puts
     level_chooser(genre_input)
   end
 
@@ -150,8 +199,40 @@ class CLILyricsQuiz
     level
   end
 
+  def take_titles(choices)
+    choices.collect do |i|
+      i.title
+    end
+  end
+
+  def end_round_options
+    puts
+    prompt = TTY::Prompt.new
+    output = prompt.keypress("Press ENTER to continue, \nPress ESC to quit, \nResumes automatically in :countdown ...",  timeout: 3, keys: [:escape, :return])
+    puts
+    puts
+    output
+  end
+
+  def pick_choices(genre_id, option_num)
+    choices = Search.get_question_by_genre(genre_id, option_num)
+    choices
+  end
+
+  def answer_response(yes_or_no, first_choice)
+    puts
+    puts
+    puts "***** #{yes_or_no} *****".center(50)
+    puts
+    puts "It was from '#{first_choice.title.light_yellow}'".center(50)
+    puts "by #{first_choice.artist.name.light_yellow}".center(50)
+    puts
+    puts
+  end
+  end
+
   def show_high_scores
-    puts Search.get_scoreboard #.center(50)
+    puts Search.get_scoreboard
   end
 
   def how_to
@@ -169,59 +250,3 @@ class CLILyricsQuiz
     puts"*****************".center(50).light_cyan
     puts
   end
-
-  def display_points(total_points)
-    puts
-    puts "***** Noice. *****".center(50).green
-    puts "You got #{total_points} points!".center(50).light_cyan
-    puts
-    puts
-  end
-
-  def take_titles(choices)
-    choices.collect do |i|
-      i.title
-    end
-  end
-
-  def end_round_options
-    puts
-    prompt = TTY::Prompt.new
-    output = prompt.keypress("Press ENTER to continue, \nPress ESC to quit, \nResumes automatically in :countdown ...",  timeout: 4, keys: [:escape, :return])
-    puts
-    puts
-    output
-  end
-
-  def pick_choices(genre_id, option_num)
-    choices = Search.get_question_by_genre(genre_id, option_num)
-    choices
-  end
-
-  def display_make_choices(choices_array)
-    choices = choices_array
-    possible_answers = choices.shuffle
-    correct_answer = nil
-    prompt = TTY::Prompt.new
-    answer_input = prompt.select("Which song is this from?".light_magenta) do |menu|
-      possible_answers.length.times do |i|
-        menu.choice possible_answers[i], i + 1
-        if possible_answers[i] == choices[0]
-          correct_answer = i + 1
-        end
-      end
-    end
-    correct_answer == answer_input
-  end
-
-  def answer_response(yes_or_no, first_choice)
-    puts
-    puts
-    puts "***** #{yes_or_no} *****".center(65)
-    puts
-    puts "It was from '#{first_choice.title.light_yellow}'".center(50)
-    puts "by #{first_choice.artist.name.light_yellow}".center(50)
-    puts
-    puts
-  end
-end
