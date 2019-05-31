@@ -59,10 +59,10 @@ class Search < ActiveRecord::Base
 
     # This method returns the Top 10 scores as a string
     def self.get_scoreboard
-        leaderboard = ["User :::: Score"]
+        leaderboard = []
         scores = Score.all.order(score: :desc).limit(10)
         scores.each do |score|
-            leaderboard << "#{score.user_name} :::: #{score.score}".center(50)
+            leaderboard << "#{score.user_name} :::: #{score.score}\n".center(50)
         end
         return leaderboard
     end
