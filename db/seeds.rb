@@ -54,8 +54,11 @@ def seed(genres)
     starting = Time.now
     puts "Begining seeding process at #{starting}"
     genres.each do |key, val|
-        puts "Populating : #{key}"
+        genre_start = Time.now
+        print "Populating : #{key}"
         populate_genre(key, find_links(val))
+        genre_end = Time.now
+        puts " (took #{genre_end - genre_start} seconds)" 
     end
     ending = Time.now
     elapsed = ending - starting
